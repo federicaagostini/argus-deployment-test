@@ -1,0 +1,18 @@
+FROM italiangrid/base-dev:latest
+
+# Layer: base
+RUN rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm && \
+    yum update -y && yum install -y git puppet redhat-lsb
+
+# Layer: Argus PEP
+EXPOSE 8150
+EXPOSE 8151
+EXPOSE 8152
+EXPOSE 8153
+EXPOSE 8154
+EXPOSE 8155
+
+COPY files/run.sh /
+COPY files/manifest.pp /
+
+CMD /run.sh
