@@ -13,10 +13,13 @@ docker build -t italiangrid/argus-deployment-test:$PLATFORM --file="Dockerfile.$
 cd ../..
 
 docker run --hostname=argus-$PLATFORM.cnaf.test \
+	--name=argus-ts
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	-v $PWD/certificates/__cnaf_test.cert.pem:/etc/grid-security/hostcert.pem:ro \
 	-v $PWD/certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro  \
 	italiangrid/argus-deployment-test:$PLATFORM
 
+docker cp argus-ts:/home/tester/argus-robot-testsuite/reports $PWD
 
+docker rm argus-ts
 

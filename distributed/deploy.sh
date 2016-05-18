@@ -2,7 +2,7 @@
 
 set -xe
 
-PLATFORM="${PLATFORM:-el7}"
+PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 
 netname="argus"$PLATFORM"_default"
@@ -30,7 +30,10 @@ git checkout $TESTSUITE_BRANCH
 cd $tmpdir/docker
 sh build-image.sh
 
+cd $testdir/../..
+
 docker run --net=$DOCKER_NET_NAME \
+	--name=argus-ts \
 	-e T_PDP_ADMIN_PASSWORD=$pdp_admin_passwd \
 	-e PAP_HOST=$pap_host \
 	-e PDP_HOST=$pdp_host \
@@ -38,7 +41,12 @@ docker run --net=$DOCKER_NET_NAME \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	italiangrid/argus-testsuite:latest
 
+docker cp argus-ts:/home/tester/argus-robot-testsuite/reports $PWD
+
+docker rm argus-ts
+
 docker-compose -f $testdir/docker-compose.yml stop
+docker-compose -f $testdir/docker-compose.yml rm -f
 
 
 
