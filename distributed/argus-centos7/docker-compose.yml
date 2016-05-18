@@ -1,11 +1,12 @@
 version: '2'
+
 services:
   pap:
-    container_name: argus-pap-el6.cnaf.test
-    hostname: argus-pap-el6
+    container_name: argus-pap-centos7.cnaf.test
+    hostname: argus-pap-centos7
     domainname: cnaf.test
     build: ./pap/
-    image: argus-pap-el6
+    image: argus-pap-centos7
     ports:
       - "8150:8150"
       - "8151:8150"
@@ -23,11 +24,11 @@ services:
 
 
   pdp:
-    container_name: argus-pdp-el6.cnaf.test
-    hostname: argus-pdp-el6
+    container_name: argus-pdp-centos7.cnaf.test
+    hostname: argus-pdp-centos7
     domainname: cnaf.test
     build: ./pdp/
-    image: argus-pdp-el6
+    image: argus-pdp-centos7
     ports:
       - "8152:8152"
       - "8153:8153"
@@ -40,21 +41,20 @@ services:
       - ../../certificates/__cnaf_test.cert.pem:/etc/grid-security/hostcert.pem:ro
       - ../../certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro
     environment:
-      ENABLE_JREBEL: y
       ENABLE_JMX: y
       JMX_PORT: 9011
       ENABLE_DEBUG: y
       DEBUG_PORT: 4001
-      PAP_HOST: argus-pap-el6.cnaf.test
+      PAP_HOST: argus-pap-centos7.cnaf.test
       PAP_PORT: 8150
 
 
   pep:
-    container_name: argus-pep-el6.cnaf.test
-    hostname: argus-pep-el6
+    container_name: argus-pep-centos7.cnaf.test
+    hostname: argus-pep-centos7
     domainname: cnaf.test
     build: ./pep/
-    image: argus-pep-el6
+    image: argus-pep-centos7
     ports:
       - "8154:8154"
       - "8155:8155"
@@ -67,25 +67,23 @@ services:
       - ../../certificates/__cnaf_test.cert.pem:/etc/grid-security/hostcert.pem:ro
       - ../../certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro
     environment:
-      ENABLE_JREBEL: y
       ENABLE_JMX: y
       JMX_PORT: 9010
       ENABLE_DEBUG: y
       DEBUG_PORT: 4000
-      PDP_HOST: argus-pdp-el6.cnaf.test
+      PDP_HOST: argus-pdp-centos7.cnaf.test
       PDP_PORT: 8152
 
 
   bdii:
-    container_name: argus-bdii-el6.cnaf.test
-    hostname: argus-bdii-el6
+    container_name: argus-bdii-centos7.cnaf.test
+    hostname: argus-bdii-centos7
     domainname: cnaf.test
     build: ./bdii/
-    image: argus-bdii-el6
+    image: argus-bdii-centos7
     ports:
       - "2170:2170"
     depends_on:
       - pap
       - pdp
       - pep
-
