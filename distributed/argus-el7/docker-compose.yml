@@ -2,8 +2,8 @@ version: '2'
 
 services:
   pap:
-    container_name: argus-pap.cnaf.test
-    hostname: argus-pap
+    container_name: argus-pap-el7.cnaf.test
+    hostname: argus-pap-el7
     domainname: cnaf.test
     build: ./pap/
     image: argus-pap-el7
@@ -24,8 +24,8 @@ services:
 
 
   pdp:
-    container_name: argus-pdp.cnaf.test
-    hostname: argus-pdp
+    container_name: argus-pdp-el7.cnaf.test
+    hostname: argus-pdp-el7
     domainname: cnaf.test
     build: ./pdp/
     image: argus-pdp-el7
@@ -45,13 +45,13 @@ services:
       JMX_PORT: 9011
       ENABLE_DEBUG: y
       DEBUG_PORT: 4001
-      PAP_HOST: argus-pap.cnaf.test
+      PAP_HOST: argus-pap-el7.cnaf.test
       PAP_PORT: 8150
 
 
   pep:
-    container_name: argus-pep.cnaf.test
-    hostname: argus-pep
+    container_name: argus-pep-el7.cnaf.test
+    hostname: argus-pep-el7
     domainname: cnaf.test
     build: ./pep/
     image: argus-pep-el7
@@ -71,13 +71,13 @@ services:
       JMX_PORT: 9010
       ENABLE_DEBUG: y
       DEBUG_PORT: 4000
-      PDP_HOST: argus-pdp.cnaf.test
+      PDP_HOST: argus-pdp-el7.cnaf.test
       PDP_PORT: 8152
 
 
   bdii:
-    container_name: argus-bdii.cnaf.test
-    hostname: argus-bdii
+    container_name: argus-bdii-el7.cnaf.test
+    hostname: argus-bdii-el7
     domainname: cnaf.test
     build: ./bdii/
     image: argus-bdii-el7
