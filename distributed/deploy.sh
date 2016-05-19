@@ -32,7 +32,7 @@ sh build-image.sh
 
 cd $testdir/../..
 
-container_name=argus-ts-$PLATFORM
+container_name=argus-ts-$PLATFORM-$$
 
 docker run --net=$DOCKER_NET_NAME \
 	--name=$container_name \
