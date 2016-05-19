@@ -6,3 +6,4 @@ include argus::pap::configure
 include argus::pdp::configure
 include argus::pepd::configure
 include argus::bdii::configure
+include argus::clients
