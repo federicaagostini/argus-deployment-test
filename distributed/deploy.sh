@@ -32,8 +32,10 @@ sh build-image.sh
 
 cd $testdir/../..
 
+container_name=argus-ts-$PLATFORM
+
 docker run --net=$DOCKER_NET_NAME \
-	--name=argus-ts \
+	--name=$container_name \
 	-e T_PDP_ADMIN_PASSWORD=$pdp_admin_passwd \
 	-e PAP_HOST=$pap_host \
 	-e PDP_HOST=$pdp_host \
@@ -41,9 +43,9 @@ docker run --net=$DOCKER_NET_NAME \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	italiangrid/argus-testsuite:latest
 
-docker cp argus-ts:/home/tester/argus-robot-testsuite/reports $PWD
+docker cp $container_name:/home/tester/argus-robot-testsuite/reports $PWD
 
-docker rm argus-ts
+docker rm $container_name
 
 docker-compose -f $testdir/docker-compose.yml stop
 docker-compose -f $testdir/docker-compose.yml rm -f
