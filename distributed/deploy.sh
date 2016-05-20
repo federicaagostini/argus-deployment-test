@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xe
+set -x
 
 PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
@@ -14,10 +14,14 @@ pep_host="argus-pep-$PLATFORM.cnaf.test"
 
 DOCKER_NET_NAME="${DOCKER_NET_NAME:-$netname}"
 
-if [ ! `which docker-compose` ]; then
-	curl -L https://github.com/docker/compose/releases/download/1.7.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-	chmod +x /usr/local/bin/docker-compose
-fi
+container_name=argus-ts-$PLATFORM-$$
+
+## Clean before run
+docker rm $container_name
+docker-compose -f $testdir/docker-compose.yml stop
+docker-compose -f $testdir/docker-compose.yml rm -f
+
+set -e
 
 ## Run Argus service in detached mode
 docker-compose -f $testdir/docker-compose.yml up --build -d
@@ -43,12 +47,9 @@ docker run --net=$DOCKER_NET_NAME \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	italiangrid/argus-testsuite:latest
 
+## Copy reports, logs and configuration
+mkdir $PWD/argus_logs $PWD/argus_conf
 docker cp $container_name:/home/tester/argus-robot-testsuite/reports $PWD
-
-docker rm $container_name
-
-docker-compose -f $testdir/docker-compose.yml stop
-docker-compose -f $testdir/docker-compose.yml rm -f
-
-
+docker cp $container_name:/var/log/argus/ $PWD/argus_logs
+docker cp $container_name:/etc/argus/ $PWD/argus_conf
 

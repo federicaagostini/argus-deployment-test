@@ -6,7 +6,7 @@ PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 
 
-## Run Argus service
+## Build images
 cd docker/
 docker build -t italiangrid/argus-deployment-test:$PLATFORM --file="Dockerfile.$PLATFORM" .
 
@@ -14,6 +14,10 @@ cd ../..
 
 container_name=argus-ts-$PLATFORM-$$
 
+## Clean before run
+docker rm $container_name
+
+## Run
 docker run --hostname=argus-$PLATFORM.cnaf.test \
 	--name=$container_name \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
@@ -21,7 +25,10 @@ docker run --hostname=argus-$PLATFORM.cnaf.test \
 	-v $PWD/certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro  \
 	italiangrid/argus-deployment-test:$PLATFORM
 
-docker cp $container_name:/opt/argus-robot-testsuite/reports $PWD
+## Copy reports, logs and configuration
+mkdir $PWD/argus_logs $PWD/argus_conf
 
-docker rm $container_name
+docker cp $container_name:/opt/argus-robot-testsuite/reports $PWD
+docker cp $container_name:/var/log/argus/ $PWD/argus_logs
+docker cp $container_name:/etc/argus/ $PWD/argus_conf
 
