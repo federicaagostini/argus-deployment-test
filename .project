@@ -3,6 +3,8 @@
 	<name>argus-deployment-test</name>
 	<comment></comment>
 	<projects>
+		<project>ci-puppet-modules</project>
+		<project>puppet</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
