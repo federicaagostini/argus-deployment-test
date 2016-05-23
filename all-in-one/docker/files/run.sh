@@ -55,6 +55,15 @@ puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/
 
 cd /
 
+## Setup certificates
+wget --no-clobber -O /etc/grid-security/hostcert.pem https://raw.githubusercontent.com/marcocaberletti/argus-deployment-test/master/certificates/__cnaf_test.cert.pem
+chown root:root /etc/grid-security/hostcert.pem
+chmod 0644 /etc/grid-security/hostcert.pem
+
+wget --no-clobber -O /etc/grid-security/hostkey.pem https://raw.githubusercontent.com/marcocaberletti/argus-deployment-test/master/certificates/__cnaf_test.key.pem
+chown root:root /etc/grid-security/hostkey.pem
+chmod 0400 /etc/grid-security/hostkey.pem
+
 
 ## Wait for services and run
 papctl start
