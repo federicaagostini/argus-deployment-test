@@ -5,18 +5,16 @@ set -x
 PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 
+container_name=argus-ts-$PLATFORM-$$
+
 ## Clean before run
 docker rm $container_name
-
-set -e
 
 ## Build images
 cd docker/
 docker build -t italiangrid/argus-deployment-test:$PLATFORM --file="Dockerfile.$PLATFORM" .
 
 cd ../..
-
-container_name=argus-ts-$PLATFORM-$$
 
 ## Run
 docker run --hostname=argus-$PLATFORM.cnaf.test \
