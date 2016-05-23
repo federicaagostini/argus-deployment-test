@@ -29,7 +29,8 @@ docker run --hostname=argus-$PLATFORM.cnaf.test \
 ## Copy reports, logs and configuration
 mkdir $PWD/argus_logs $PWD/argus_conf
 
-docker cp $container_name:/opt/argus-robot-testsuite/reports $PWD
 docker cp $container_name:/var/log/argus/ $PWD/argus_logs
 docker cp $container_name:/etc/argus/ $PWD/argus_conf
+docker cp $container_name:/opt/argus-robot-testsuite/reports $PWD
+
 

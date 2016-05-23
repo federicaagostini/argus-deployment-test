@@ -46,10 +46,22 @@ docker run --net=$DOCKER_NET_NAME \
 	-e PEP_HOST=$pep_host \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	italiangrid/argus-testsuite:latest
+	
+## Stop services
+docker-compose -f $testdir/docker-compose.yml stop
 
 ## Copy reports, logs and configuration
 mkdir $PWD/argus_logs $PWD/argus_conf
+
+docker cp argus-pap-$PLATFORM.cnaf.test:/var/log/argus/pap/ $PWD/argus_logs
+docker cp argus-pap-$PLATFORM.cnaf.test:/etc/argus/pap/ $PWD/argus_conf
+
+docker cp argus-pdp-$PLATFORM.cnaf.test:/var/log/argus/pdp/ $PWD/argus_logs
+docker cp argus-pdp-$PLATFORM.cnaf.test:/etc/argus/pdp/ $PWD/argus_conf
+
+docker cp argus-pep-$PLATFORM.cnaf.test:/var/log/argus/pepd/ $PWD/argus_logs
+docker cp argus-pep-$PLATFORM.cnaf.test:/etc/argus/pepd/ $PWD/argus_conf
+
 docker cp $container_name:/home/tester/argus-robot-testsuite/reports $PWD
-docker cp $container_name:/var/log/argus/ $PWD/argus_logs
-docker cp $container_name:/etc/argus/ $PWD/argus_conf
+
 

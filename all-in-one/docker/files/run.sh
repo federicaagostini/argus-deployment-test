@@ -40,7 +40,7 @@ TIMEOUT="${TIMEOUT:-300}"
 
 
 ## Utility
-yum update -y && yum install -y curl voms-clients myproxy voms-test-ca
+yum update -y && yum install -y wget curl voms-clients myproxy voms-test-ca
 
 ## Get Puppet modules
 cd /opt
