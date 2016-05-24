@@ -1,4 +1,4 @@
 include puppet-infn-ca
 include puppet-test-ca
 
-include argus::pap::configure
+class { 'argus::pap::configure': pap_java_opts => '-Djava.security.egd=file:/dev/urandom' }
