@@ -21,8 +21,6 @@ docker rm $container_name
 docker-compose -f $testdir/docker-compose.yml stop
 docker-compose -f $testdir/docker-compose.yml rm -f
 
-set -e
-
 ## Run Argus service in detached mode
 docker-compose -f $testdir/docker-compose.yml up --build -d
 
