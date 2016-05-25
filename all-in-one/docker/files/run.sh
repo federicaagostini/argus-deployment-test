@@ -46,12 +46,12 @@ yum update -y && yum install -y wget curl voms-clients myproxy voms-test-ca
 cd /opt
 rm -rfv *puppet*
 
-git clone https://github.com/cnaf/ci-puppet-modules.git
+git clone https://github.com/cnaf/ci-puppet-modules.git && \
 git clone https://github.com/marcocaberletti/puppet.git
 
 
 ## Configure
-puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/etc/puppet/module/ /manifest.pp
+puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/etc/puppet/modules/ /manifest.pp
 
 cd /
 

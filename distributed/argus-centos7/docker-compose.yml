@@ -14,8 +14,6 @@ services:
       - "4002:4002"
     volumes:
       - /dev/urandom:/dev/random
-      - ../../certificates/__cnaf_test.cert.pem:/etc/grid-security/hostcert.pem:ro
-      - ../../certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro
     environment:
       ENABLE_JMX: y
       JMX_PORT: 9012
@@ -38,8 +36,6 @@ services:
       - pap
     volumes:
       - /dev/urandom:/dev/random
-      - ../../certificates/__cnaf_test.cert.pem:/etc/grid-security/hostcert.pem:ro
-      - ../../certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro
     environment:
       ENABLE_JMX: y
       JMX_PORT: 9011
@@ -64,8 +60,6 @@ services:
       - pdp
     volumes:
       - /dev/urandom:/dev/random
-      - ../../certificates/__cnaf_test.cert.pem:/etc/grid-security/hostcert.pem:ro
-      - ../../certificates/__cnaf_test.key.pem:/etc/grid-security/hostkey.pem:ro
     environment:
       ENABLE_JMX: y
       JMX_PORT: 9010

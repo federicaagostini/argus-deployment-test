@@ -10,7 +10,7 @@ git clone https://github.com/marcocaberletti/puppet.git
 
 cd /
 
-puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/etc/puppet/module/ /manifest.pp
+puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/etc/puppet/modules/ /manifest.pp
 
 /etc/init.d/bdii restart
 
