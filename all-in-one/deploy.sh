@@ -41,8 +41,3 @@ mkdir $PWD/argus_logs $PWD/argus_conf $PWD/argus_reports
 docker cp $container_name:/var/log/argus/ $PWD/argus_logs
 docker cp $container_name:/etc/argus/ $PWD/argus_conf
 docker cp $container_name:/opt/argus-robot-testsuite/reports $PWD/argus_reports
-
-docker stop haveged
-docker rm haveged
-
-

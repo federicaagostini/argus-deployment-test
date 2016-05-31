@@ -76,7 +76,3 @@ docker cp argus-pep-$PLATFORM.cnaf.test:/var/log/argus/pepd/ $PWD/argus_logs
 docker cp argus-pep-$PLATFORM.cnaf.test:/etc/argus/pepd/ $PWD/argus_conf
 
 docker cp $container_name:/home/tester/argus-robot-testsuite/reports $PWD/argus_reports
-
-docker stop haveged
-docker rm haveged
-
