@@ -33,7 +33,8 @@ if [ -z "$id" ]; then
 fi
 
 ## Run Argus service in detached mode
-docker-compose -f $testdir/docker-compose.yml up --build -d
+docker-compose -f $testdir/docker-compose.yml build
+docker-compose -f $testdir/docker-compose.yml up -d
 
 sleep 120
 
