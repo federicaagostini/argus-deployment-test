@@ -10,15 +10,6 @@ services:
     ports:
       - "8150:8150"
       - "8151:8150"
-      - "9012:9012"
-      - "4002:4002"
-    volumes:
-      - /dev/urandom:/dev/random
-    environment:
-      ENABLE_JMX: y
-      JMX_PORT: 9012
-      ENABLE_DEBUG: y
-      DEBUG_PORT: 4002
 
 
   pdp:
@@ -30,17 +21,9 @@ services:
     ports:
       - "8152:8152"
       - "8153:8153"
-      - "9011:9011"
-      - "4001:4001"
     depends_on:
       - pap
-    volumes:
-      - /dev/urandom:/dev/random
     environment:
-      ENABLE_JMX: y
-      JMX_PORT: 9011
-      ENABLE_DEBUG: y
-      DEBUG_PORT: 4001
       PAP_HOST: argus-pap-centos7.cnaf.test
       PAP_PORT: 8150
 
@@ -54,17 +37,9 @@ services:
     ports:
       - "8154:8154"
       - "8155:8155"
-      - "9010:9010"
-      - "4000:4000"
     depends_on:
       - pdp
-    volumes:
-      - /dev/urandom:/dev/random
     environment:
-      ENABLE_JMX: y
-      JMX_PORT: 9010
-      ENABLE_DEBUG: y
-      DEBUG_PORT: 4000
       PDP_HOST: argus-pdp-centos7.cnaf.test
       PDP_PORT: 8152
 
