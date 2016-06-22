@@ -51,6 +51,7 @@ git clone https://github.com/marcocaberletti/puppet.git
 
 
 ## Configure
+puppet module install puppetlabs-stdlib
 puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/etc/puppet/modules/ /manifest.pp
 
 cd /
