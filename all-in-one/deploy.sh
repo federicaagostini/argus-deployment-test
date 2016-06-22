@@ -12,7 +12,7 @@ docker rm $container_name
 
 ## Build images
 cd docker/
-docker build -t italiangrid/argus-deployment-test:$PLATFORM --file="Dockerfile.$PLATFORM" .
+docker build --no-cache -t italiangrid/argus-deployment-test:$PLATFORM --file="Dockerfile.$PLATFORM" .
 
 cd ../..
 
