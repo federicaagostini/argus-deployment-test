@@ -21,7 +21,10 @@ echo "Push images for distributed deployment"
 
 for plat in ${platforms}; do
 	for srv in $services; do
-		docker tag argus-${srv}-${plat} ${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${plat}
-		docker push ${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${plat}
+		image_name=italiangrid/argus-${srv}-${plat}
+		dest=${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${plat}
+		
+		docker tag $image_name $dest
+		docker push $dest
 	done
 done
