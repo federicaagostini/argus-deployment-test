@@ -4,6 +4,7 @@ set -x
 
 PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
+DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
 
 netname="argus"$PLATFORM"_default"
 testdir="$PWD/argus-$PLATFORM"
@@ -13,6 +14,7 @@ pdp_host="argus-pdp-$PLATFORM.cnaf.test"
 pep_host="argus-pep-$PLATFORM.cnaf.test"
 
 DOCKER_NET_NAME="${DOCKER_NET_NAME:-$netname}"
+REGISTRY=""
 
 container_name=argus-ts-$PLATFORM-$$
 
@@ -32,9 +34,21 @@ if [ -z "$id" ]; then
 	docker run --name=haveged --privileged -d harbur/haveged
 fi
 
+if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
+  REGISTRY=${DOCKER_REGISTRY_HOST}/
+	## Pull images
+	for srv in "pap pdp pep bdii"; do
+		docker pull ${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${PLATFORM}
+	done
+else
+	## Build locally
+	docker-compose -f $testdir/docker-compose.yml build --no-cache
+fi
+
+export REGISTRY
+
 ## Run Argus service in detached mode
-docker-compose -f $testdir/docker-compose.yml build --no-cache
-docker-compose -f $testdir/docker-compose.yml up -d
+docker-compose -f $testdir/docker-compose.yml up -d --no-build
 
 sleep 120
 
@@ -58,7 +72,7 @@ docker run --net=$DOCKER_NET_NAME \
 	-e PEP_HOST=$pep_host \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	-e TIMEOUT=600 \
-	italiangrid/argus-testsuite:latest
+	${REGISTRY}italiangrid/argus-testsuite:latest
 	
 ## Stop services
 docker-compose -f $testdir/docker-compose.yml stop
