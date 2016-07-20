@@ -37,7 +37,8 @@ fi
 if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
   REGISTRY=${DOCKER_REGISTRY_HOST}/
 	## Pull images
-	for srv in "pap pdp pep bdii"; do
+	services="pap pdp pep bdii"
+	for srv in $services; do
 		docker pull ${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${PLATFORM}
 	done
 else
