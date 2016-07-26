@@ -11,6 +11,7 @@ if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
 fi
 
 container_name=argus-ts-$PLATFORM-$$
+workdir=$PWD
 
 ## Clean before run
 docker rm $container_name
@@ -23,7 +24,7 @@ else
 	## Build locally
 	cd docker/
 	docker build --no-cache -t italiangrid/argus-deployment-test:$PLATFORM --file="Dockerfile.$PLATFORM" .
-	cd ../..
+	cd $workdir
 fi
 
 ## Create more entropy
@@ -45,9 +46,9 @@ docker run --hostname=argus-$PLATFORM.cnaf.test \
 	${REGISTRY}italiangrid/argus-deployment-test:$PLATFORM
 
 ## Copy reports, logs and configuration
-rm -rf $PWD/argus_*
-mkdir $PWD/argus_logs $PWD/argus_conf $PWD/argus_reports
+rm -rfv $workdir/argus_*
+mkdir $workdir/argus_logs $workdir/argus_conf $workdir/argus_reports
 
-docker cp $container_name:/var/log/argus/ $PWD/argus_logs
-docker cp $container_name:/etc/argus/ $PWD/argus_conf
-docker cp $container_name:/opt/argus-robot-testsuite/reports $PWD/argus_reports
+docker cp $container_name:/var/log/argus/ $workdir/argus_logs
+docker cp $container_name:/etc/argus/ $workdir/argus_conf
+docker cp $container_name:/opt/argus-robot-testsuite/reports $workdir/argus_reports

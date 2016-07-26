@@ -17,6 +17,7 @@ DOCKER_NET_NAME="${DOCKER_NET_NAME:-$netname}"
 REGISTRY=""
 
 container_name=argus-ts-$PLATFORM-$$
+workdir=$PWD
 
 ## Clean before run
 docker rm $container_name
@@ -58,10 +59,15 @@ tmpdir="/tmp/tester_$$/argus-robot-testsuite"
 git clone https://github.com/marcocaberletti/argus-robot-testsuite.git $tmpdir
 cd $tmpdir
 git checkout $TESTSUITE_BRANCH
-cd $tmpdir/docker
-sh build-image.sh
 
-cd $testdir/../..
+if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
+	docker pull ${DOCKER_REGISTRY_HOST}/italiangrid/argus-testsuite
+else
+	cd $tmpdir/docker
+	sh build-image.sh
+fi
+
+cd $workdir
 
 container_name=argus-ts-$PLATFORM-$$
 
@@ -79,16 +85,21 @@ docker run --net=$DOCKER_NET_NAME \
 docker-compose -f $testdir/docker-compose.yml stop
 
 ## Copy reports, logs and configuration
-rm -rf $PWD/argus_*
-mkdir $PWD/argus_logs $PWD/argus_conf $PWD/argus_reports
+rm -rfv $workdir/argus_*
 
-docker cp argus-pap-$PLATFORM.cnaf.test:/var/log/argus/pap/ $PWD/argus_logs
-docker cp argus-pap-$PLATFORM.cnaf.test:/etc/argus/pap/ $PWD/argus_conf
+logdir=$workdir/argus_logs
+confdir=$workdir/argus_conf
+reportdir=$workdir/argus_reports
 
-docker cp argus-pdp-$PLATFORM.cnaf.test:/var/log/argus/pdp/ $PWD/argus_logs
-docker cp argus-pdp-$PLATFORM.cnaf.test:/etc/argus/pdp/ $PWD/argus_conf
+mkdir $logdir $confdir $reportdir
 
-docker cp argus-pep-$PLATFORM.cnaf.test:/var/log/argus/pepd/ $PWD/argus_logs
-docker cp argus-pep-$PLATFORM.cnaf.test:/etc/argus/pepd/ $PWD/argus_conf
+docker cp argus-pap-$PLATFORM.cnaf.test:/var/log/argus/pap/ $logdir
+docker cp argus-pap-$PLATFORM.cnaf.test:/etc/argus/pap/ $confdir
 
-docker cp $container_name:/home/tester/argus-robot-testsuite/reports $PWD/argus_reports
+docker cp argus-pdp-$PLATFORM.cnaf.test:/var/log/argus/pdp/ $logdir
+docker cp argus-pdp-$PLATFORM.cnaf.test:/etc/argus/pdp/ $confdir
+
+docker cp argus-pep-$PLATFORM.cnaf.test:/var/log/argus/pepd/ $logdir
+docker cp argus-pep-$PLATFORM.cnaf.test:/etc/argus/pepd/ $confdir
+
+docker cp $container_name:/home/tester/argus-robot-testsuite/reports $reportdir
