@@ -36,12 +36,9 @@ if [ -z "$id" ]; then
 fi
 
 if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
-  REGISTRY=${DOCKER_REGISTRY_HOST}/
+	export REGISTRY=${DOCKER_REGISTRY_HOST}/
 	## Pull images
-	services="pap pdp pep bdii"
-	for srv in $services; do
-		docker pull ${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${PLATFORM}
-	done
+	docker-compose -f $testdir/docker-compose.yml pull
 else
 	## Build locally
 	docker-compose -f $testdir/docker-compose.yml build --no-cache
