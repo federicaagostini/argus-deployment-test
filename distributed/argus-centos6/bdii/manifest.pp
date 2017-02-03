@@ -1,4 +1,4 @@
-class { 'argus::bdii::configure':
+class { 'mwdevel_argus::bdii::configure':
   pap_host => 'argus-pap-centos6.cnaf.test',
   pap_port => 8150,
   pdp_host => 'argus-pdp-centos6.cnaf.test',

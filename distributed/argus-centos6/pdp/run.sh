@@ -7,13 +7,13 @@ cd /opt
 rm -rfv *puppet*
 
 git clone https://github.com/cnaf/ci-puppet-modules.git
-git clone https://github.com/marcocaberletti/puppet.git
-
-# Configure
-puppet module install puppetlabs-stdlib
-puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/puppet/modules/:/etc/puppet/modules/ /manifest.pp
+git clone https://github.com/argus-authz/argus-mw-devel.git
 
 cd /
+
+## Configure
+puppet module install puppetlabs-stdlib
+puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/argus-mw-devel/:/etc/puppet/modules/ /manifest.pp
 
 ## Setup certificates
 wget --no-clobber -O /etc/grid-security/hostcert.pem https://raw.githubusercontent.com/marcocaberletti/argus-deployment-test/master/certificates/__cnaf_test.cert.pem
