@@ -28,9 +28,10 @@ function wait_for_service() {
 set -xe
 
 CERT_DIR="/usr/share/igi-test-ca"
-GLOBUS_DIR="$HOME/.globus"
+GLOBUS_DIR="${HOME}/.globus"
+TS_DIR="/opt/argus-robot-testsuite"
 
-TESTSUITE_REPO="${TESTSUITE_REPO:-https://github.com/marcocaberletti/argus-robot-testsuite.git}"
+TESTSUITE_REPO="${TESTSUITE_REPO:-https://github.com/argus-authz/argus-robot-testsuite}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 OUTPUT_REPORTS="${OUTPUT_REPORTS:-reports}"
 PAP_PORT="${PAP_PORT:-8150}"
@@ -40,11 +41,13 @@ TIMEOUT="${TIMEOUT:-300}"
 
 
 ## Utility
-yum update -y && yum install -y wget curl voms-clients myproxy voms-test-ca
+yum update -y && \
+yum install -y wget curl voms-clients myproxy voms-test-ca && \
+yum clean all
 
 ## Get Puppet modules
 cd /opt
-rm -rfv *puppet*
+rm -rfv ci-puppet-modules/ argus-mw-devel/
 
 git clone https://github.com/cnaf/ci-puppet-modules.git && \
 git clone https://github.com/argus-authz/argus-mw-devel.git
@@ -54,7 +57,6 @@ git clone https://github.com/argus-authz/argus-mw-devel.git
 puppet module install puppetlabs-stdlib
 puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/argus-mw-devel/:/etc/puppet/modules/ /manifest.pp
 
-cd /
 
 ## Setup certificates
 wget --no-clobber -O /etc/grid-security/hostcert.pem https://raw.githubusercontent.com/marcocaberletti/argus-deployment-test/master/certificates/__cnaf_test.cert.pem
@@ -70,7 +72,8 @@ chmod 0400 /etc/grid-security/hostkey.pem
 papctl start
 echo "Wait for PAP"
 set +e
-wait_for_service $HOSTNAME $PAP_PORT $TIMEOUT
+wait_for_service ${HOSTNAME} ${PAP_PORT} ${TIMEOUT}
+
 set -e
 echo "PAP is ready. Start PDP"
 
@@ -78,54 +81,57 @@ echo "PAP is ready. Start PDP"
 pdpctl start
 echo "Wait for PDP"
 set +e
-wait_for_service $HOSTNAME $PDP_PORT $TIMEOUT
+wait_for_service ${HOSTNAME} ${PDP_PORT} ${TIMEOUT}
 set -e
 echo "PDP is ready. Start for PEP"
 
 pepdctl start
 echo "Wait for PEP"
 set +e
-wait_for_service $HOSTNAME $PEP_PORT $TIMEOUT
+wait_for_service ${HOSTNAME} ${PEP_PORT} ${TIMEOUT}
 set -e
 echo "PEP is ready."
 
 
 ## Copy user certificates in default directory
-cd $HOME
-mkdir $GLOBUS_DIR
+cd ${HOME}
+mkdir ${GLOBUS_DIR}
 
-cp $CERT_DIR/test0.cert.pem $GLOBUS_DIR/usercert.pem
-chmod 644 $GLOBUS_DIR/usercert.pem
+cp ${CERT_DIR}/test0.cert.pem ${GLOBUS_DIR}/usercert.pem
+chmod 644 ${GLOBUS_DIR}/usercert.pem
 
-echo pass > $GLOBUS_DIR/password
-openssl rsa -in $CERT_DIR/test0.key.pem -out $GLOBUS_DIR/userkey.pem -passin file:$GLOBUS_DIR/password
-chmod 400 $GLOBUS_DIR/userkey.pem
+echo pass > ${GLOBUS_DIR}/password
+openssl rsa -in ${CERT_DIR}/test0.key.pem -out ${GLOBUS_DIR}/userkey.pem -passin file:${GLOBUS_DIR}/password
+chmod 400 ${GLOBUS_DIR}/userkey.pem
+
+cp /usr/share/igi-test-ca-2/test0.cert.pem ${GLOBUS_DIR}/iota_usercert.pem
+cp /usr/share/igi-test-ca-2/test0.key.pem ${GLOBUS_DIR}/iota_userkey.pem
+openssl rsa -in ${GLOBUS_DIR}/iota_userkey.pem -out ${GLOBUS_DIR}/iota_userkey.rsa.pem -passin file:${GLOBUS_DIR}/password
+mv ${GLOBUS_DIR}/iota_userkey.rsa.pem ${GLOBUS_DIR}/iota_userkey.pem
+chmod 0644 ${GLOBUS_DIR}/iota_usercert.pem
+chmod 0400 ${GLOBUS_DIR}/iota_userkey.pem
 
 
 ## Clone testsuite code
-echo "Clone argus-robot-testsuite repository ..."
-git clone $TESTSUITE_REPO /opt/argus-robot-testsuite
+if [ ! -d ${TS_DIR} ]; then
+	echo "Clone argus-robot-testsuite repository ..." 
+	git clone ${TESTSUITE_REPO} --branch ${TESTSUITE_BRANCH} ${TS_DIR}
+fi
 
-pushd /opt/argus-robot-testsuite
-
-echo "Switch branch ..."
-git checkout $TESTSUITE_BRANCH
+cd ${TS_DIR}
 
 ## Edit configuration
 sed -i '/^T_PAP_HOST.*/d' env_config.py
 sed -i '/^T_PDP_HOST.*/d' env_config.py
 sed -i '/^T_PEP_HOST.*/d' env_config.py
 
-echo "T_PAP_HOST='$HOSTNAME'" >> env_config.py
-echo "T_PDP_HOST='$HOSTNAME'" >> env_config.py
-echo "T_PEP_HOST='$HOSTNAME'" >> env_config.py
+echo "T_PAP_HOST='${HOSTNAME}'" >> env_config.py
+echo "T_PDP_HOST='${HOSTNAME}'" >> env_config.py
+echo "T_PEP_HOST='${HOSTNAME}'" >> env_config.py
 
 
 ## Run
 echo "Run ..."
-pybot --pythonpath .:lib  -d $OUTPUT_REPORTS --exclude=remote tests/
+pybot --pythonpath .:lib  -d ${OUTPUT_REPORTS} --exclude=remote tests/
 
 echo "Done."
-
-
-

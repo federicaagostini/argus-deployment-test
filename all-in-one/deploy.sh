@@ -3,6 +3,7 @@
 set -x
 
 PLATFORM="${PLATFORM:-centos7}"
+TESTSUITE_REPO="${TESTSUITE_REPO:-https://github.com/argus-authz/argus-robot-testsuite}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
 REGISTRY=""
@@ -41,6 +42,7 @@ fi
 ## Run
 docker run --hostname=argus-$PLATFORM.cnaf.test \
 	--name=$container_name \
+	-e TESTSUITE_REPO=${TESTSUITE_REPO} \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	-e TIMEOUT=600 \
 	${REGISTRY}italiangrid/argus-deployment-test:$PLATFORM

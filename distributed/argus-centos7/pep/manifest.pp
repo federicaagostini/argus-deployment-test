@@ -1,6 +1,13 @@
 include mwdevel_infn_ca
 include mwdevel_test_ca
+include mwdevel_egi_trust_anchors
+include mwdevel_igtf_distribution
+include mwdevel_test_ca_policies
 
+package { 'ca_policy_*':
+  ensure  => latest,
+  require => Class['mwdevel_igtf_distribution'],
+} ->
 class { 'mwdevel_argus::pepd::configure':
   pdp_host                              => 'argus-pdp-centos7.cnaf.test',
   pdp_port                              => 8152,

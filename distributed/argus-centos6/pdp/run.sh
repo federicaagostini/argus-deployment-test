@@ -4,7 +4,7 @@ set -xe
 
 # Get Puppet modules
 cd /opt
-rm -rfv *puppet*
+rm -rfv ci-puppet-modules/ argus-mw-devel/
 
 git clone https://github.com/cnaf/ci-puppet-modules.git
 git clone https://github.com/argus-authz/argus-mw-devel.git
@@ -54,4 +54,3 @@ pdpctl start
 sleep 5
 
 tail -f /var/log/argus/pdp/*.log
-
