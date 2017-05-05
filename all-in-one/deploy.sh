@@ -45,6 +45,7 @@ docker run --hostname=argus-$PLATFORM.cnaf.test \
 	-e TESTSUITE_REPO=${TESTSUITE_REPO} \
 	-e TESTSUITE_BRANCH=$TESTSUITE_BRANCH \
 	-e TIMEOUT=600 \
+        -e FACTER_ARGUS_REPO_BASE_URL=${FACTER_ARGUS_REPO_BASE_URL} \
 	${REGISTRY}italiangrid/argus-deployment-test:$PLATFORM
 
 ## Copy reports, logs and configuration
@@ -54,3 +55,4 @@ mkdir $workdir/argus_logs $workdir/argus_conf $workdir/argus_reports
 docker cp $container_name:/var/log/argus/ $workdir/argus_logs
 docker cp $container_name:/etc/argus/ $workdir/argus_conf
 docker cp $container_name:/opt/argus-robot-testsuite/reports $workdir/argus_reports
+

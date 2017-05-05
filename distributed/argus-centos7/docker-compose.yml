@@ -10,6 +10,8 @@ services:
     ports:
       - "8150:8150"
       - "8151:8150"
+    environment:
+      FACTER_ARGUS_REPO_BASE_URL: ${FACTER_ARGUS_REPO_BASE_URL}
 
 
   pdp:
@@ -26,6 +28,7 @@ services:
     environment:
       PAP_HOST: argus-pap-centos7.cnaf.test
       PAP_PORT: 8150
+      FACTER_ARGUS_REPO_BASE_URL: ${FACTER_ARGUS_REPO_BASE_URL}
 
 
   pep:
@@ -42,6 +45,7 @@ services:
     environment:
       PDP_HOST: argus-pdp-centos7.cnaf.test
       PDP_PORT: 8152
+      FACTER_ARGUS_REPO_BASE_URL: ${FACTER_ARGUS_REPO_BASE_URL}
 
 
   bdii:
