@@ -25,17 +25,6 @@ docker rm ${container_name}
 docker-compose -f ${testdir}/docker-compose.yml stop
 docker-compose -f ${testdir}/docker-compose.yml rm -f
 
-## Create more entropy
-list=`docker ps -aq -f status=exited -f name=haveged | xargs`
-if [ ! -z "$list"]; then
-	docker rm ${list}
-fi
-
-id=`docker ps -q -f status=running -f name=haveged`
-if [ -z "$id" ]; then
-	docker run --name=haveged --privileged -d harbur/haveged
-fi
-
 if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
 	export REGISTRY=${DOCKER_REGISTRY_HOST}/
 	## Pull images

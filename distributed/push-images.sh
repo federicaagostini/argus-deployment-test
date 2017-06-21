@@ -2,7 +2,7 @@
 
 set -xe
 
-DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-"cloud-vm128.cloud.cnaf.infn.it"}
+DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-"cloud-vm114.cloud.cnaf.infn.it"}
 PLATFORM=${PLATFORM:-centos7}
 
 export REGISTRY="${DOCKER_REGISTRY_HOST}/"
