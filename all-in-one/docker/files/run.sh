@@ -55,7 +55,8 @@ git clone https://github.com/argus-authz/argus-mw-devel.git
 
 ## Configure
 /opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
-/opt/puppetlabs/bin/puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/argus-mw-devel/:/etc/puppetlabs/code/environments/production/modules /manifest.pp && grep -q 'failure: 0' /opt/puppetlabs/puppet/cache/state/last_run_summary.yaml
+/opt/puppetlabs/bin/puppet apply --modulepath=/opt/ci-puppet-modules/modules/:/opt/argus-mw-devel/:/etc/puppetlabs/code/environments/production/modules /manifest.pp && \
+	grep -q 'failure: 0' /opt/puppetlabs/puppet/cache/state/last_run_summary.yaml
 
 
 ## Setup certificates
