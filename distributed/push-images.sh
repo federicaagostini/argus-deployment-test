@@ -12,7 +12,7 @@ echo "Push images for distributed deployment for platform ${PLATFORM}"
 services="pap pdp pep bdii"
 
 for srv in $services; do
-	dest=${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${PLATFORM}
+	dest=${DOCKER_REGISTRY_HOST}/italiangrid/argus-${srv}-${PLATFORM}:latest
 	docker push ${dest}
 done
 
