@@ -15,4 +15,5 @@ EXPOSE 8155
 COPY run.sh /
 COPY manifest.pp /
 
+RUN chmod +x /run.sh
 CMD /run.sh

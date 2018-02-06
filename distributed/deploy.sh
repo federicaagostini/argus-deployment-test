@@ -6,6 +6,7 @@ PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_REPO="${TESTSUITE_REPO:-https://github.com/argus-authz/argus-robot-testsuite}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
+USE_CACHE=${USE_CACHE:-false}
 
 netname="argus"${PLATFORM}"_default"
 testdir="$PWD/argus-${PLATFORM}"
@@ -16,6 +17,12 @@ pep_host="argus-pep-${PLATFORM}.cnaf.test"
 
 DOCKER_NET_NAME="${DOCKER_NET_NAME:-$netname}"
 REGISTRY=""
+
+docker_opts="--no-cache"
+
+if [ $USE_CACHE == "true" ]; then
+	docker_opts=""
+fi
 
 container_name=argus-ts-${PLATFORM}-$$
 workdir=${PWD}
@@ -31,7 +38,7 @@ if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
 	docker-compose -f ${testdir}/docker-compose.yml pull
 else
 	## Build locally
-	docker-compose -f ${testdir}/docker-compose.yml build --no-cache
+	docker-compose -f ${testdir}/docker-compose.yml build ${docker_opts}
 fi
 
 export REGISTRY
