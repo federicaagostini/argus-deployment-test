@@ -8,7 +8,7 @@ TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
 DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
 USE_CACHE=${USE_CACHE:-false}
 
-netname="argus"${PLATFORM}"_default"
+netname="argus-"${PLATFORM}"_default"
 testdir="$PWD/argus-${PLATFORM}"
 pdp_admin_passwd="pdpadmin_password"
 pap_host="argus-pap-${PLATFORM}.cnaf.test"
