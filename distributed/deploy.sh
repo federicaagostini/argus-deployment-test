@@ -5,7 +5,6 @@ set -x
 PLATFORM="${PLATFORM:-centos7}"
 TESTSUITE_REPO="${TESTSUITE_REPO:-https://github.com/argus-authz/argus-robot-testsuite}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-master}"
-DOCKER_REGISTRY_HOST=${DOCKER_REGISTRY_HOST:-""}
 USE_CACHE=${USE_CACHE:-false}
 
 netname="argus-"${PLATFORM}"_default"
@@ -16,7 +15,6 @@ pdp_host="argus-pdp-${PLATFORM}.cnaf.test"
 pep_host="argus-pep-${PLATFORM}.cnaf.test"
 
 DOCKER_NET_NAME="${DOCKER_NET_NAME:-$netname}"
-REGISTRY=""
 
 docker_opts="--no-cache"
 
@@ -32,16 +30,8 @@ docker rm ${container_name}
 docker-compose -f ${testdir}/docker-compose.yml stop
 docker-compose -f ${testdir}/docker-compose.yml rm -f
 
-if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
-	export REGISTRY=${DOCKER_REGISTRY_HOST}/
-	## Pull images
-	docker-compose -f ${testdir}/docker-compose.yml pull
-else
-	## Build locally
-	docker-compose -f ${testdir}/docker-compose.yml build ${docker_opts}
-fi
-
-export REGISTRY
+# Pull images
+docker-compose -f ${testdir}/docker-compose.yml pull
 
 ## Run Argus service in detached mode
 docker-compose -f ${testdir}/docker-compose.yml up -d --no-build
@@ -52,12 +42,7 @@ sleep 120
 tmpdir="/tmp/tester_$$/argus-robot-testsuite"
 git clone ${TESTSUITE_REPO} --branch ${TESTSUITE_BRANCH} ${tmpdir}
 
-if [ -n "${DOCKER_REGISTRY_HOST}" ]; then
-	docker pull ${DOCKER_REGISTRY_HOST}/italiangrid/argus-testsuite
-else
-	cd ${tmpdir}/docker
-	sh build-image.sh
-fi
+docker pull italiangrid/argus-testsuite
 
 cd ${workdir}
 
@@ -72,7 +57,7 @@ docker run --net=${DOCKER_NET_NAME} \
 	-e TESTSUITE_REPO=${TESTSUITE_REPO} \
 	-e TESTSUITE_BRANCH=${TESTSUITE_BRANCH} \
 	-e TIMEOUT=600 \
-	${REGISTRY}italiangrid/argus-testsuite:latest
+	italiangrid/argus-testsuite:latest
 	
 ## Stop services
 docker-compose -f ${testdir}/docker-compose.yml stop

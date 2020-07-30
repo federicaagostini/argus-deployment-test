@@ -6,7 +6,7 @@ services:
     hostname: argus-pap-centos7
     domainname: cnaf.test
     build: ./pap/
-    image: ${REGISTRY}italiangrid/argus-pap-centos7
+    image: italiangrid/argus-pap-centos7
     ports:
       - "8150:8150"
       - "8151:8150"
@@ -19,7 +19,7 @@ services:
     hostname: argus-pdp-centos7
     domainname: cnaf.test
     build: ./pdp/
-    image: ${REGISTRY}italiangrid/argus-pdp-centos7
+    image: italiangrid/argus-pdp-centos7
     ports:
       - "8152:8152"
       - "8153:8153"
@@ -36,7 +36,7 @@ services:
     hostname: argus-pep-centos7
     domainname: cnaf.test
     build: ./pep/
-    image: ${REGISTRY}italiangrid/argus-pep-centos7
+    image: italiangrid/argus-pep-centos7
     ports:
       - "8154:8154"
       - "8155:8155"
@@ -53,7 +53,7 @@ services:
     hostname: argus-bdii-centos7
     domainname: cnaf.test
     build: ./bdii/
-    image: ${REGISTRY}italiangrid/argus-bdii-centos7
+    image: italiangrid/argus-bdii-centos7
     ports:
       - "2170:2170"
     depends_on:
